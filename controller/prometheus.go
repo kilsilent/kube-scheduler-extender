@@ -53,7 +53,7 @@ func (n *Nodes) flushOverdueNode() {
 	currentTime := time.Now()
 	for k, v := range n.NodeMem {
 		if currentTime.Sub(v.CheckTime) >= nodeOverdueTime {
-			log.Infoln("节点 ", k, " 数据过期,从cache中删除")
+			log.Infoln("节点 ", k, " 数据过期,从cache中删除,", " memoryValue:"+strconv.Itoa(v.Value)+"; checkTime:"+v.CheckTime.Format("2006-01-02 15:04:05")+";")
 			delete(n.NodeMem, k)
 		}
 	}

@@ -52,7 +52,7 @@ func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 	}
 	numNodesToFind := len(*args.NodeNames)
 
-	log.Debugf("pod %v/%v 调度,可选 node: %v", pod.Name, pod.Namespace, strings.Join(*args.NodeNames, ","))
+	log.Debugf("pod %v/%v 调度算法前,可选 node: %v", pod.Name, pod.Namespace, strings.Join(*args.NodeNames, ","))
 
 	// 如果预选函数==0,直接返回所有节点
 	if len(predicatesSorted) == 0 {
@@ -95,6 +95,8 @@ func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 		}
 	}
 
+	log.Debugf("pod %v/%v 调度算法后,可选 node: %v", pod.Name, pod.Namespace, strings.Join(*result.NodeNames, ","))
+
 	return &result
 }
 
@@ -123,7 +125,7 @@ func podFitsOnNode(pod *v1.Pod, node v1.Node, nodeName string) (bool, []string, 
 }
 
 func CheckMemoryLoadPredicate(pod *v1.Pod, node v1.Node, nodeName string) (bool, []string, error) {
-	log.Debugf("开始并发执行预选 %v 算法,在 node %v 调度 pod %v/%v", CheckMemoryLoadPred, nodeName, pod.Name, pod.Namespace)
+	//log.Debugf("开始并发执行预选 %v 算法,在 node %v 调度 pod %v/%v", CheckMemoryLoadPred, nodeName, pod.Name, pod.Namespace)
 	var failReasons []string
 
 	currentTime := time.Now()
