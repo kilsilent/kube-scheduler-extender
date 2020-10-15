@@ -34,7 +34,6 @@ var predicatesSorted = []string{CheckMemoryLoadPred}
 // it's webhooked to pkg/scheduler/core/generic_scheduler.go#findNodesThatFitPod()
 func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 	var node v1.Node
-	numNodesToFind := len(*args.NodeNames)
 
 	var filteredNodeNames []string
 	failedNodes := make(extender.FailedNodesMap)
@@ -45,6 +44,12 @@ func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 		FailedNodes: failedNodes,
 		Error:       "",
 	}
+
+	if args.NodeNames == nil {
+		result.Error = "请查看policy配置,目前只支持 nodeCacheCapable: true"
+		return &result
+	}
+	numNodesToFind := len(*args.NodeNames)
 
 	log.Debugf("pod %v/%v 调度,可选 node: %v", pod.Name, pod.Namespace, strings.Join(*args.NodeNames, ","))
 
