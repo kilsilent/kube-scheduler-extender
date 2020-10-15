@@ -26,6 +26,19 @@ var prioritySorted = []string{CheckMemoryLoadPriority}
 // you can't see existing scores calculated so far by default scheduler
 // instead, scores output by this function will be added back to default scheduler
 func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
+	if args.NodeNames == nil {
+		log.Errorln("请查看policy配置,目前只支持 nodeCacheCapable: true,返回所有节点 Score: 1")
+		result := make(extender.HostPriorityList, 0, len(args.Nodes.Items))
+		for _, v := range args.Nodes.Items {
+			result = append(result, extender.HostPriority{
+				Host:  v.Name,
+				Score: 1,
+			})
+		}
+
+		return &result
+	}
+
 	numNode := len(*args.NodeNames)
 
 	// 优选算法为0,则直接返回所有节点，Score = 1
@@ -110,7 +123,7 @@ func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
 	// Reduce 过程
 	for _, node := range result {
 		node.Score = node.Score / int64(numPriority)
-		log.Debugf("node %v,Score %v",node.Host,node.Score)
+		log.Debugf("node %v,Score %v", node.Host, node.Score)
 	}
 
 	return &result
@@ -131,7 +144,7 @@ func CheckMemoryLoadPriorityMap(pod *v1.Pod, node v1.Node, nodeName string) (ext
 			score = extender.MinExtenderPriority
 		}
 
-		log.Debugf("执行优选算法 %v,node %v,设置 Score 为 %v", CheckMemoryLoadPriority, nodeName,score)
+		log.Debugf("执行优选算法 %v,node %v,设置 Score 为 %v", CheckMemoryLoadPriority, nodeName, score)
 
 	} else {
 		log.Debugf("执行优选算法 %v,node %v 缓存未命中,设置 Score 为 1", CheckMemoryLoadPriority, nodeName)

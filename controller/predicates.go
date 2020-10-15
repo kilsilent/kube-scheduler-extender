@@ -46,6 +46,7 @@ func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 	}
 
 	if args.NodeNames == nil {
+		log.Errorln("请查看policy配置,目前只支持 nodeCacheCapable: true")
 		result.Error = "请查看policy配置,目前只支持 nodeCacheCapable: true"
 		return &result
 	}
