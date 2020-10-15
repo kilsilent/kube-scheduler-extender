@@ -44,7 +44,7 @@ func Filter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 	} else {
 		b, _ := json.Marshal(extenderArgs)
-		fmt.Println(string(b))
+		log.Debugln(string(b))
 		extenderFilterResult = controller.Filter(extenderArgs)
 	}
 
@@ -68,7 +68,7 @@ func Prioritize(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		hostPriorityList = &schedulerapi.HostPriorityList{}
 	} else {
 		b, _ := json.Marshal(extenderArgs)
-		fmt.Println(string(b))
+		log.Debugln(string(b))
 		hostPriorityList = controller.Prioritize(extenderArgs)
 
 	}
