@@ -22,8 +22,8 @@ var (
 	prometheusUrl             = kingpin.Flag("prometheus_url", "Prometheus url. (env: PROMETHEUS_URL)").Default(util.GetEnv("PROMETHEUS_URL", "http://127.0.0.1:9090")).String()
 	prometheusMemoryMetrics   = kingpin.Flag("prometheus_memory_metrics", "Prometheus memory metrics. (env: PROMETHEUS_MEMORY_METRICS)").Default(util.GetEnv("PROMETHEUS_MEMORY_METRICS", "HostMemoryUsagePercent")).String()
 	prometheusMemoryThreshold = kingpin.Flag("prometheus_memory_threshold", "Prometheus memory threshold. (env: PROMETHEUS_MEMORY_THRESHOLD)").Default(util.GetEnv("PROMETHEUS_MEMORY_THRESHOLD", "80")).Int()
-
-	listenAddress = kingpin.Flag("listen_address", "Address to listen on for web interface and telemetry. (env: LISTEN_ADDRESS)").Default(util.GetEnv("LISTEN_ADDRESS", ":8888")).String()
+	listenAddress             = kingpin.Flag("listen_address", "Address to listen on for web interface and telemetry. (env: LISTEN_ADDRESS)").Default(util.GetEnv("LISTEN_ADDRESS", ":8888")).String()
+	configPath                = kingpin.Flag("config_path", "config file path. (env: CONFIG_PATH)").Default(util.GetEnv("CONFIG_PATH", "config.yaml")).String()
 )
 
 func main() {
@@ -35,15 +35,15 @@ func main() {
 	defer cancel()
 	controller.NewNodeInfo(ctx.Done())
 
-	setConf()
+	setConf(*prometheusUrl, *prometheusMemoryMetrics, *prometheusMemoryThreshold)
 
 	log.Infoln("start up kube-scheduler-extender!, API server listening at ", *listenAddress)
 	http.ListenAndServe(*listenAddress, routers.Router)
 
 }
 
-func setConf() {
-	conf.Conf.PrometheusUrl = *prometheusUrl
-	conf.Conf.PrometheusMemoryMetrics = *prometheusMemoryMetrics
-	conf.Conf.PrometheusMemoryThreshold = *prometheusMemoryThreshold
+func setConf(url, metrics string, threshold int) {
+	conf.Conf.PrometheusUrl = url
+	conf.Conf.PrometheusMemoryMetrics = metrics
+	conf.Conf.PrometheusMemoryThreshold = threshold
 }
