@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/prometheus/common/log"
 	"io"
+	"kube-scheduler-extender/conf"
 	"kube-scheduler-extender/controller"
 	"net/http"
 
@@ -43,8 +44,11 @@ func Filter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			Error: err.Error(),
 		}
 	} else {
-		b, _ := json.Marshal(extenderArgs)
-		log.Debugln(string(b))
+		if conf.Conf.LogRequestBody {
+			b, _ := json.Marshal(extenderArgs)
+			log.Debugln(string(b))
+		}
+
 		extenderFilterResult = controller.Filter(extenderArgs)
 	}
 
@@ -67,8 +71,11 @@ func Prioritize(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		log.Errorln("解析参数错误:", err)
 		hostPriorityList = &schedulerapi.HostPriorityList{}
 	} else {
-		b, _ := json.Marshal(extenderArgs)
-		log.Debugln(string(b))
+		if conf.Conf.LogRequestBody {
+			b, _ := json.Marshal(extenderArgs)
+			log.Debugln(string(b))
+		}
+
 		hostPriorityList = controller.Prioritize(extenderArgs)
 
 	}
