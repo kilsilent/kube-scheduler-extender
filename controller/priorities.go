@@ -123,7 +123,7 @@ func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
 	// Reduce 过程
 	for _, node := range result {
 		node.Score = node.Score / int64(numPriority)
-		log.Debugf("node %v,Score %v", node.Host, node.Score)
+		log.Debugf("最终得分: %v/%v -> %v, Score: (%d)", args.Pod.Name, args.Pod.Namespace, node.Host, node.Score)
 	}
 
 	return &result
@@ -131,7 +131,7 @@ func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
 }
 
 func CheckMemoryLoadPriorityMap(pod *v1.Pod, node v1.Node, nodeName string) (extender.HostPriority, error) {
-	log.Debugf("开始执行优选 %v 算法,计算 node %v 得分", CheckMemoryLoadPriority, nodeName)
+	//log.Debugf("开始执行优选 %v 算法,计算 node %v 得分", CheckMemoryLoadPriority, nodeName)
 	var score int64
 
 	if n, exist := NodeInfo.NodeMem[nodeName]; exist {
