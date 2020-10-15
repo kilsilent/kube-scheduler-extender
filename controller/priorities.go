@@ -5,6 +5,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/util/workqueue"
 	extender "k8s.io/kube-scheduler/extender/v1"
+	"strings"
 	"sync"
 )
 
@@ -26,6 +27,7 @@ var prioritySorted = []string{CheckMemoryLoadPriority}
 // you can't see existing scores calculated so far by default scheduler
 // instead, scores output by this function will be added back to default scheduler
 func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
+
 	if args.NodeNames == nil {
 		log.Errorln("请查看policy配置,目前只支持 nodeCacheCapable: true,返回所有节点 Score: 1")
 		result := make(extender.HostPriorityList, 0, len(args.Nodes.Items))
@@ -38,6 +40,7 @@ func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
 
 		return &result
 	}
+	log.Debugf("pod %v/%v 优选算法前,可选 node: %v", args.Pod.Name, args.Pod.Namespace, strings.Join(*args.NodeNames, ","))
 
 	numNode := len(*args.NodeNames)
 
