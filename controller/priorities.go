@@ -40,9 +40,9 @@ func Prioritize(args extender.ExtenderArgs) *extender.HostPriorityList {
 
 		return &result
 	}
-	log.Debugf("pod %v/%v 优选算法前,可选 node: %v", args.Pod.Name, args.Pod.Namespace, strings.Join(*args.NodeNames, ","))
 
 	numNode := len(*args.NodeNames)
+	log.Debugf("pod %v/%v 优选算法, node 节点: %v", args.Pod.Name, args.Pod.Namespace, strings.Join(*args.NodeNames, ","))
 
 	// 优选算法为0,则直接返回所有节点，Score = 1
 	if len(prioritySorted) == 0 {

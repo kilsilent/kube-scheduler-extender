@@ -52,7 +52,7 @@ func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 	}
 	numNodesToFind := len(*args.NodeNames)
 
-	log.Debugf("pod %v/%v 调度算法前,可选 node: %v", pod.Name, pod.Namespace, strings.Join(*args.NodeNames, ","))
+	log.Debugf("pod %v/%v 调度算法前,node 数量: %v, node 详情: %v", pod.Name, pod.Namespace, len(*args.NodeNames), strings.Join(*args.NodeNames, ","))
 
 	// 如果预选函数==0,直接返回所有节点
 	if len(predicatesSorted) == 0 {
@@ -95,7 +95,7 @@ func Filter(args extender.ExtenderArgs) *extender.ExtenderFilterResult {
 		}
 	}
 
-	log.Debugf("pod %v/%v 调度算法后,可选 node: %v", pod.Name, pod.Namespace, strings.Join(*result.NodeNames, ","))
+	log.Debugf("pod %v/%v 调度算法后,node 数量: %v, node 详情: %v", pod.Name, pod.Namespace, len(*result.NodeNames), strings.Join(*result.NodeNames, ","))
 
 	return &result
 }
